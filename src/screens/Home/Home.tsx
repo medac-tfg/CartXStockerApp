@@ -3,6 +3,7 @@ import Header from "../../components/Home/Header/Header";
 import ProductTable from "../../components/Home/ProductTable/ProductTable";
 
 import { ProductTableProps } from "./@types/table";
+import Footer from "../../components/Footer/Footer";
 
 const Home = () => {
   const data = [
@@ -67,13 +68,16 @@ const Home = () => {
   };
 
   return (
-    <FlatList
-      data={data}
-      ListHeaderComponent={Header}
-      renderItem={renderItem}
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
-    />
+    <>
+      <FlatList
+        data={data}
+        ListHeaderComponent={Header}
+        renderItem={renderItem}
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      />
+      <Footer />
+    </>
   );
 };
 
