@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 import Greetings from "./Greetings/Greetings";
 import Stats from "./Stats/Stats";
@@ -8,7 +8,6 @@ const Header = () => {
     <View style={styles.container}>
       <Greetings />
       <Stats />
-      
     </View>
   );
 };

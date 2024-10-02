@@ -13,6 +13,7 @@ import { useCallback } from "react";
 import { View, Platform } from "react-native";
 
 import Home from "./screens/Home/Home";
+import Footer from "./components/Footer/Footer";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,6 +71,7 @@ export default function App() {
             options={{ gestureEnabled: false, animationEnabled: false }}
           />
         </Stack.Navigator>
+        <Footer />
       </View>
     </NavigationContainer>
   );

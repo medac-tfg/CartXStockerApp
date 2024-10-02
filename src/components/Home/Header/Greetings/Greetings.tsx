@@ -28,7 +28,7 @@ const Greetings = () => {
         <Text style={styles.subTitle}>{formattedDate}</Text>
       </Text>
       <Image
-        source={require("../../../assets/images/profilePicture.jpg")}
+        source={require("../../../../assets/images/profilePicture.jpg")}
         style={styles.image}
       />
     </View>
