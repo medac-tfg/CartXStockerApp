@@ -3,7 +3,9 @@ import { useNavigation } from "@react-navigation/native";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const ScanProductHint = () => {
-  const { goBack } = useNavigation();
+  const { navigate, goBack } = useNavigation<any>();
+
+  const onOkayPress = () => navigate("ScanBarcode");
 
   return (
     <>
@@ -20,7 +22,7 @@ const ScanProductHint = () => {
           source={require("../../assets/lottie/scanProduct.json")}
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onOkayPress}>
           <Text style={styles.buttonText}>Okay, Got it!</Text>
         </TouchableOpacity>
       </View>

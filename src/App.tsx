@@ -14,6 +14,7 @@ import { View, Platform } from "react-native";
 
 import Home from "./screens/Home/Home";
 import ScanProductHint from "./screens/ScanProductHint/ScanProductHint";
+import ScanBarcode from "./screens/ScanBarcode/ScanBarcode";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -75,12 +76,15 @@ export default function App() {
           <Stack.Screen
             name="ScanProductHint"
             component={ScanProductHint}
-            // modal with from the bottom to up animation
             options={{
               presentation: "transparentModal",
-              cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+              cardStyleInterpolator:
+                CardStyleInterpolators.forModalPresentationIOS,
             }}
           />
+
+          {/* Scan Barcode Screen */}
+          <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
         </Stack.Navigator>
       </View>
     </NavigationContainer>
