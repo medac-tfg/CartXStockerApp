@@ -13,7 +13,7 @@ import { useCallback } from "react";
 import { View, Platform } from "react-native";
 
 import Home from "./screens/Home/Home";
-import Footer from "./components/Footer/Footer";
+import ScanProductHint from "./screens/ScanProductHint/ScanProductHint";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,8 +70,18 @@ export default function App() {
             component={Home}
             options={{ gestureEnabled: false, animationEnabled: false }}
           />
+
+          {/* Scan Product Hint Screen */}
+          <Stack.Screen
+            name="ScanProductHint"
+            component={ScanProductHint}
+            // modal with from the bottom to up animation
+            options={{
+              presentation: "transparentModal",
+              cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+            }}
+          />
         </Stack.Navigator>
-        <Footer />
       </View>
     </NavigationContainer>
   );
