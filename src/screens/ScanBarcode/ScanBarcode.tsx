@@ -34,10 +34,17 @@ const ScanBarcode = () => {
 
   if (!permission || !permission.granted) {
     return (
-      <View>
-        <Text>Please grant camera permissions.</Text>
-        <Button title="Grant Permission" onPress={requestPermission} />
-      </View>
+      <>
+        <View style={styles.noPermissionContainer}>
+          <Text style={styles.noPermissionText}>
+            Please grant camera permissions to proceed with scanning.
+          </Text>
+          <Button title="Grant Permission" onPress={requestPermission} />
+        </View>
+        <TouchableOpacity style={styles.backButton} onPress={goBack}>
+          <Feather name="arrow-left" size={24} color="#000" />
+        </TouchableOpacity>
+      </>
     );
   }
 
@@ -64,6 +71,17 @@ const ScanBarcode = () => {
 };
 
 const styles = StyleSheet.create({
+  noPermissionContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPermissionText: {
+    fontSize: 20,
+    fontFamily: "Montserrat-SemiBold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
   camera: {
     position: "absolute",
     width: "100%",
