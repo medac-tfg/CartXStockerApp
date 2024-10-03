@@ -15,6 +15,7 @@ import { View, Platform } from "react-native";
 import Home from "./screens/Home/Home";
 import ScanProductHint from "./screens/ScanProductHint/ScanProductHint";
 import ScanBarcode from "./screens/ScanBarcode/ScanBarcode";
+import ScanRFID from "./screens/ScanRFID/ScanRFID";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -85,6 +86,9 @@ export default function App() {
 
           {/* Scan Barcode Screen */}
           <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
+
+          {/* Scan RFID Screen */}
+          <Stack.Screen name="ScanRFID" component={ScanRFID} />
         </Stack.Navigator>
       </View>
     </NavigationContainer>
