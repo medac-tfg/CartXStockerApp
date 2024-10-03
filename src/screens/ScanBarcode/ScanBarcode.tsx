@@ -28,7 +28,7 @@ const ScanBarcode = () => {
   const onBarcodeScanned = (barcodeScanResult: BarcodeScanningResult) => {
     Alert.alert("Barcode Scanned", barcodeScanResult.data);
     setBarcodeScanned(true);
-
+    
     navigate("ScanRFID");
   };
 
@@ -54,6 +54,19 @@ const ScanBarcode = () => {
         facing="back"
         style={styles.camera}
         onBarcodeScanned={barcodeScanned ? undefined : onBarcodeScanned}
+        barcodeScannerSettings={{
+          barcodeTypes: [
+            "ean13",
+            "ean13",
+            "ean8",
+            "upc_e",
+            "code39",
+            "code93",
+            "itf14",
+            "codabar",
+            "code128",
+          ],
+        }}
       >
         <Overlay />
       </CameraView>
