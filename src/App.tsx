@@ -24,7 +24,7 @@ const StackTheme = {
   dark: false,
   colors: {
     primary: "#fff",
-    background: "#fff",
+    background: "#ECECEC",
     card: "#fff",
     text: "#000",
     border: "#fff",
