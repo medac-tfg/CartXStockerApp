@@ -1,5 +1,5 @@
 {
-  "name": "stockerapp",
+  "name": "CartXStockerAPP",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
