@@ -6,9 +6,9 @@ const Stats = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Current Shop Status</Text>
       <View style={styles.statsContainer}>
-        <Stat title="Items Replenished" value="2.2k" />
+        <Stat title="Total Products" value="3.4k" />
         <Stat title={"Total\nItems Sold"} value="3.6k" />
-        <Stat title="Items Removed" value="12" />
+        <Stat title="Items Replenished" value="2.2k" />
       </View>
     </View>
   );
