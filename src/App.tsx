@@ -16,6 +16,7 @@ import Home from "./screens/Home/Home";
 import ScanProductHint from "./screens/ScanProductHint/ScanProductHint";
 import ScanBarcode from "./screens/ScanBarcode/ScanBarcode";
 import ScanRFID from "./screens/ScanRFID/ScanRFID";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,6 +32,8 @@ const StackTheme = {
     notification: "#fff",
   },
 };
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -57,40 +60,42 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer theme={StackTheme}>
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{
-            headerShown: false,
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          }}
-        >
-          {/* Main Home Screen */}
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{ gestureEnabled: false, animationEnabled: false }}
-          />
-
-          {/* Scan Product Hint Screen */}
-          <Stack.Screen
-            name="ScanProductHint"
-            component={ScanProductHint}
-            options={{
-              presentation: "transparentModal",
-              cardStyleInterpolator:
-                CardStyleInterpolators.forModalPresentationIOS,
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer theme={StackTheme}>
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <Stack.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }}
-          />
+          >
+            {/* Main Home Screen */}
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{ gestureEnabled: false, animationEnabled: false }}
+            />
 
-          {/* Scan Barcode Screen */}
-          <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
+            {/* Scan Product Hint Screen */}
+            <Stack.Screen
+              name="ScanProductHint"
+              component={ScanProductHint}
+              options={{
+                presentation: "transparentModal",
+                cardStyleInterpolator:
+                  CardStyleInterpolators.forModalPresentationIOS,
+              }}
+            />
 
-          {/* Scan RFID Screen */}
-          <Stack.Screen name="ScanRFID" component={ScanRFID} />
-        </Stack.Navigator>
-      </View>
-    </NavigationContainer>
+            {/* Scan Barcode Screen */}
+            <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
+
+            {/* Scan RFID Screen */}
+            <Stack.Screen name="ScanRFID" component={ScanRFID} />
+          </Stack.Navigator>
+        </View>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
