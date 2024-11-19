@@ -1,12 +1,6 @@
 import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ProductTableProps } from "./@types/product";
 import { ProductRenderItemProps } from "./@types/product";
@@ -32,18 +26,19 @@ const Table = ({ productList }: ProductTableProps) => {
   );
 
   return (
-    <FlatList
-      data={productList}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      ListHeaderComponent={
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Product</Text>
-          <Text style={styles.headerText}>Weight</Text>
-          <Text style={styles.headerText}>Quantity</Text>
-        </View>
-      }
-    />
+    <>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Product</Text>
+        <Text style={styles.headerText}>Weight</Text>
+        <Text style={styles.headerText}>Quantity</Text>
+      </View>
+
+      {productList.length > 0 ? (
+        productList.map((item) => renderItem({ item }))
+      ) : (
+        <Text style={styles.noProductsText}>No products found</Text>
+      )}
+    </>
   );
 };
 
@@ -60,6 +55,12 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     fontSize: 14,
     textAlign: "center",
+  },
+  noProductsText: {
+    fontFamily: "Montserrat-SemiBold",
+    fontSize: 14,
+    textAlign: "center",
+    paddingTop: 10,
   },
   row: {
     flexDirection: "row",

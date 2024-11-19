@@ -1,9 +1,10 @@
-import { FlatList, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import Header from "../../components/Home/Header/Header";
-import ProductTable from "../../components/Home/ProductTable/ProductTable";
 
 import { ProductTableProps } from "./@types/table";
 import Footer from "../../components/Footer/Footer";
+import LastStoredProducts from "../../components/Home/ProductTables/LastStoredProducts";
+import TopSoldItems from "../../components/Home/ProductTables/TopSoldItems";
 
 const Home = () => {
   const data = [
@@ -63,19 +64,16 @@ const Home = () => {
     },
   ];
 
-  const renderItem = ({ item }: ProductTableProps) => {
-    return <ProductTable item={item} />;
-  };
-
   return (
     <>
-      <FlatList
-        data={data}
-        ListHeaderComponent={Header}
-        renderItem={renderItem}
-        contentContainerStyle={styles.container}
+      <ScrollView
         showsVerticalScrollIndicator={false}
-      />
+        contentContainerStyle={styles.container}
+      >
+        <Header />
+        <LastStoredProducts />
+        <TopSoldItems />
+      </ScrollView>
       <Footer />
     </>
   );

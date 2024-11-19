@@ -9,9 +9,6 @@ export type Product = {
 };
 
 export type ProductTableProps = {
-  item: {
-    id: string;
-    title: string;
-    productList: Product[];
-  };
+  title: string;
+  productList: Product[];
 };

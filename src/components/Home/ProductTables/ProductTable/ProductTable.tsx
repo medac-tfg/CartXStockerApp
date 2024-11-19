@@ -1,18 +1,25 @@
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 
-import { ProductTableProps } from "../../../screens/Home/@types/table";
+import { ProductTableProps } from "../../../../screens/Home/@types/table";
 
 import Header from "./Header/Header";
 import Search from "./Search/Search";
 import Table from "./Table/Table";
 
-const ProductTable = ({ item }: ProductTableProps) => {
+const ProductTable = ({ title, productList }: ProductTableProps) => {
+  const [searchText, setSearchText] = useState("");
+
+  const filteredProducts = productList.filter((product) =>
+    product.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
-      <Header title={item.title} />
+      <Header title={title} />
       <View style={styles.productContainer}>
-        <Search />
-        <Table productList={item.productList} />
+        <Search searchText={searchText} setSearchText={setSearchText} />
+        <Table productList={filteredProducts} />
       </View>
     </View>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Feather } from "@expo/vector-icons";
 import {
   View,
@@ -8,9 +8,13 @@ import {
   Keyboard,
 } from "react-native";
 
-const Search = () => {
-  const [searchText, setSearchText] = useState("");
-
+const Search = ({
+  searchText,
+  setSearchText,
+}: {
+  searchText: string;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const clearSearch = () => {
     setSearchText("");
     Keyboard.dismiss();
@@ -51,4 +55,5 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Medium",
   },
 });
+
 export default Search;
