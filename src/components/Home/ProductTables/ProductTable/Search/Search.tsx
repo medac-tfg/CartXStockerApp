@@ -8,13 +8,9 @@ import {
   Keyboard,
 } from "react-native";
 
-const Search = ({
-  searchText,
-  setSearchText,
-}: {
-  searchText: string;
-  setSearchText: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+import { SearchProps } from "../@types/search";
+
+const Search = ({ searchText, setSearchText }: SearchProps) => {
   const clearSearch = () => {
     setSearchText("");
     Keyboard.dismiss();
