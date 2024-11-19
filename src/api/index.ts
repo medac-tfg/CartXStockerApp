@@ -27,4 +27,17 @@ api.interceptors.request.use(
   }
 );
 
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (error.response && error.response.status === 401) {
+      // Log out (No access token or invalid access token)
+      console.log("Error 401, Logging out");
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
