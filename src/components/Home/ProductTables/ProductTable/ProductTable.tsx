@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 
-import { ProductTableProps } from "../../../../screens/Home/@types/table";
+import { ProductTableProps } from "./@types/table";
 
 import Header from "./Header/Header";
 import Search from "./Search/Search";

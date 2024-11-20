@@ -1,4 +1,4 @@
-import { Product } from "../../../../../../screens/Home/@types/table";
+import { Product } from "../../@types/table";
 
 export type ProductTableProps = {
   productList: Product[];
