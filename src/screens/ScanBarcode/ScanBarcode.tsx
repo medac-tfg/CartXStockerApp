@@ -15,36 +15,76 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { getProductByBarcode } from "../../api/endpoints/barcode";
 
 import Overlay from "./Overlay/Overlay";
+import Modal from "./ProductModal/ProductModal";
+
+import { ProductData } from "./@types/product";
 
 const width = Dimensions.get("window").width;
 
 const ScanBarcode = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [barcodeScanned, setBarcodeScanned] = useState(false);
+  const [productData, setProductData] = useState<ProductData>();
+  const [modalVisible, setModalVisible] = useState(false);
   const { navigate, goBack } = useNavigation<any>();
 
-  const onBarcodeScanned = (barcodeScanResult: BarcodeScanningResult) => {
-    Alert.alert("Barcode Scanned", barcodeScanResult.data);
-    setBarcodeScanned(true);
-    
-    navigate("ScanRFID");
+  const onBarcodeScanned = async (barcodeScanResult: BarcodeScanningResult) => {
+    try {
+      const barcode = barcodeScanResult.data;
+      setBarcodeScanned(true);
+
+      const data = await getProductByBarcode(barcode);
+      if (!data) {
+        Alert.alert("Error", "Product not found.", [
+          {
+            text: "OK",
+            onPress: () => {
+              setTimeout(() => setBarcodeScanned(false), 2000);
+            },
+          },
+        ]);
+        return;
+      }
+
+      setProductData(data);
+      setModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+      Alert.alert("Error", "An error occurred while fetching product data.", [
+        {
+          text: "OK",
+          onPress: () => {
+            setTimeout(() => setBarcodeScanned(false), 2000);
+          },
+        },
+      ]);
+    }
+  };
+
+  const handleProductConfirmation = (confirmed: boolean) => {
+    setModalVisible(false);
+    if (confirmed) {
+      navigate("ScanRFID", { productData });
+      return;
+    }
+
+    setTimeout(() => setBarcodeScanned(false), 2000);
   };
 
   if (!permission || !permission.granted) {
     return (
-      <>
-        <View style={styles.noPermissionContainer}>
-          <Text style={styles.noPermissionText}>
-            Please grant camera permissions to proceed with scanning.
-          </Text>
-          <Button title="Grant Permission" onPress={requestPermission} />
-        </View>
+      <View style={styles.noPermissionContainer}>
+        <Text style={styles.noPermissionText}>
+          Please grant camera permissions to proceed with scanning.
+        </Text>
+        <Button title="Grant Permission" onPress={requestPermission} />
         <TouchableOpacity style={styles.backButton} onPress={goBack}>
           <Feather name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
-      </>
+      </View>
     );
   }
 
@@ -79,6 +119,13 @@ const ScanBarcode = () => {
         <Text style={styles.step}>Step 1</Text>
         <Text style={styles.title}>Scan Product Barcode</Text>
       </View>
+
+      <Modal
+        visible={modalVisible}
+        setVisible={setModalVisible}
+        productData={productData}
+        handleProductConfirmation={handleProductConfirmation}
+      />
     </>
   );
 };
