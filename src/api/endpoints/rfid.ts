@@ -1,12 +1,11 @@
 import api from "..";
 import { AxiosError } from "axios";
 
-export const getProductByBarcode = async (barcode: string) => {
+export const scanProduct = async (productId: string, rfid: string) => {
   try {
-    const { data } = await api.get("/api/stocker/getProductByBarcode", {
-      params: {
-        barcode,
-      },
+    const { data } = await api.post("/api/stocker/addScannedProduct", {
+      productId,
+      rfid,
     });
 
     return data;
