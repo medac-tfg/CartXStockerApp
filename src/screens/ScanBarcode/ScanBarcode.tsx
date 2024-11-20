@@ -21,15 +21,25 @@ import Overlay from "./Overlay/Overlay";
 import Modal from "./ProductModal/ProductModal";
 
 import { ProductData } from "./@types/product";
-
-const width = Dimensions.get("window").width;
+import { NavigationProps } from "./@types/navigation";
 
 const ScanBarcode = () => {
   const [permission, requestPermission] = useCameraPermissions();
+  const { navigate, goBack } = useNavigation<NavigationProps>();
   const [barcodeScanned, setBarcodeScanned] = useState(false);
   const [productData, setProductData] = useState<ProductData>();
   const [modalVisible, setModalVisible] = useState(false);
-  const { navigate, goBack } = useNavigation<any>();
+
+  const sendErrorAlert = (message: string) => {
+    Alert.alert("Error", message, [
+      {
+        text: "OK",
+        onPress: () => {
+          setTimeout(() => setBarcodeScanned(false), 2000);
+        },
+      },
+    ]);
+  };
 
   const onBarcodeScanned = async (barcodeScanResult: BarcodeScanningResult) => {
     try {
@@ -38,14 +48,7 @@ const ScanBarcode = () => {
 
       const data = await getProductByBarcode(barcode);
       if (!data) {
-        Alert.alert("Error", "Product not found.", [
-          {
-            text: "OK",
-            onPress: () => {
-              setTimeout(() => setBarcodeScanned(false), 2000);
-            },
-          },
-        ]);
+        sendErrorAlert("Product not found.");
         return;
       }
 
@@ -53,14 +56,7 @@ const ScanBarcode = () => {
       setModalVisible(true);
     } catch (error) {
       console.error("Error fetching product data:", error);
-      Alert.alert("Error", "An error occurred while fetching product data.", [
-        {
-          text: "OK",
-          onPress: () => {
-            setTimeout(() => setBarcodeScanned(false), 2000);
-          },
-        },
-      ]);
+      sendErrorAlert("An error occurred while fetching product data.");
     }
   };
 
@@ -156,7 +152,7 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: "center",
     alignItems: "center",
-    width: width,
+    width: Dimensions.get("window").width,
     marginTop: 120,
   },
   step: {
