@@ -11,12 +11,12 @@ import {
 import { useFonts } from "expo-font";
 import { useCallback } from "react";
 import { View, Platform } from "react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Home from "./screens/Home/Home";
 import ScanProductHint from "./screens/ScanProductHint/ScanProductHint";
 import ScanBarcode from "./screens/ScanBarcode/ScanBarcode";
 import ScanRFID from "./screens/ScanRFID/ScanRFID";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
 
