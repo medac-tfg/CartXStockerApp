@@ -8,79 +8,114 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Alert,
 } from "react-native";
+import { useQueryClient } from "@tanstack/react-query";
 import { scanProduct } from "../../api/endpoints/rfid";
+
+import AlertModal from "../../components/ScanRFID/AlertModal/AlertModal";
 
 import { ScanRFIDRouteProp } from "./@types/route";
 
 const ScanRFID = ({ route }: { route: ScanRFIDRouteProp }) => {
-  const buffer = useRef("");
+  const { goBack } = useNavigation<any>();
+  const [inputText, setInputText] = useState("");
+  const [canScan, setCanScan] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalActions, setModalActions] = useState<
+    { text: string; onPress: () => void }[]
+  >([]);
   const inputRef = useRef<TextInput>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [isScanning, setIsScanning] = useState(true);
-
-  const { goBack } = useNavigation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!inputRef.current) return;
-
-    // Focus the TextInput once the component mounts
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
-  const handleChangeText = (text: string) => {
-    buffer.current += text;
+  const handleScan = async ({
+    nativeEvent: { text },
+  }: {
+    nativeEvent: { text: string };
+  }) => {
+    setInputText("");
 
-    // Clear timeout so we start another one again
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+    if (!canScan) return;
+
+    setCanScan(false);
+
+    if (text.length !== 24) {
+      showModal("Invalid RFID tag. Please try again.", [
+        { text: "OK", onPress: () => setCanScan(true) },
+      ]);
+      return;
     }
 
-    // If we didn't get any more input for 500ms, we assume the scanner has typed the full RFID tag
-    timeoutRef.current = setTimeout(async () => {
-      setIsScanning(false);
+    const data = await scanProduct(route.params.productData._id, text);
+    if (data?.error) {
+      showModal(`Could not scan RFID tag. Reason: ${data.data}`, [
+        { text: "OK", onPress: () => setCanScan(true) },
+      ]);
+      return;
+    }
 
-      const data = await scanProduct(
-        route.params.productData._id,
-        buffer.current
-      );
-      if (!data) {
-        Alert.alert("Error", "Could not scan RFID tag. Product not found.");
-        return;
-      }
+    await queryClient.invalidateQueries({ queryKey: ["stats"] });
+    await queryClient.invalidateQueries({ queryKey: ["lastStoredProducts"] });
+    await queryClient.invalidateQueries({ queryKey: ["topSoldItems"] });
+    
+    showModal("RFID tag scanned successfully.", [
+      {
+        text: "Scan Another (same product)",
+        onPress: () => setCanScan(true),
+      },
+      {
+        text: "Go Back",
+        onPress: goBack,
+      },
+    ]);
+  };
 
-      console.log("Scanned Data:", buffer.current);
-    }, 500);
+  const showModal = (
+    message: string,
+    actions: { text: string; onPress: () => void }[]
+  ) => {
+    setModalMessage(message);
+    setModalActions(actions);
+    setModalVisible(true);
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={goBack}>
-        <Feather name="arrow-left" size={24} color="#fff" />
-      </TouchableOpacity>
-      <View style={styles.textContainer}>
-        <Text style={styles.step}>Step 2</Text>
-        <Text style={styles.title}>Scan RFID Tag</Text>
-      </View>
-      <LottieView
-        autoPlay
-        style={styles.lottie}
-        source={require("../../assets/lottie/scanRFID.json")}
-      />
-      {isScanning && (
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.backButton} onPress={goBack}>
+          <Feather name="arrow-left" size={24} color="#fff" />
+        </TouchableOpacity>
+        <View style={styles.textContainer}>
+          <Text style={styles.step}>Step 2</Text>
+          <Text style={styles.title}>Scan RFID Tag</Text>
+        </View>
+        <LottieView
+          autoPlay
+          style={styles.lottie}
+          source={require("../../assets/lottie/scanRFID.json")}
+        />
         <TextInput
           ref={inputRef}
-          style={{ height: 0, opacity: 0 }}
-          autoFocus={true}
-          value=""
-          onChangeText={handleChangeText}
-          keyboardType="default"
-          blurOnSubmit={false}
-          showSoftInputOnFocus={false}
+          style={styles.hiddenInput}
+          value={inputText}
+          onChangeText={setInputText}
+          onSubmitEditing={handleScan}
+          submitBehavior="submit"
+          onBlur={() => inputRef.current?.focus()}
+          autoFocus
         />
-      )}
-    </View>
+      <AlertModal
+        visible={modalVisible}
+        message={modalMessage}
+        actions={modalActions}
+        onRequestClose={() => setModalVisible(false)}
+      />
+      </View>
+    </>
   );
 };
 
@@ -119,6 +154,13 @@ const styles = StyleSheet.create({
     height: 450,
     alignSelf: "center",
     marginRight: -25,
+  },
+  hiddenInput: {
+    position: "absolute",
+    top: -1000,
+    left: -1000,
+    height: 0,
+    width: 0,
   },
 });
 

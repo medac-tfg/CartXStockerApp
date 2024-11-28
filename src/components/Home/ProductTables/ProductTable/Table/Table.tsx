@@ -6,9 +6,13 @@ import { ProductTableProps } from "./@types/product";
 import { ProductRenderItemProps } from "./@types/product";
 
 const Table = ({ productList }: ProductTableProps) => {
-  const renderItem = ({ item }: ProductRenderItemProps) => (
-    <View style={styles.row}>
-      <Image source={item.image} style={styles.productImage} />
+  const renderItem = ({ item, index }: ProductRenderItemProps) => (
+    <View style={styles.row} key={index}>
+      <Image
+        source={{ uri: item.image }}
+        style={styles.productImage}
+        contentFit="contain"
+      />
       <Text style={styles.productName} numberOfLines={1}>
         {item.name}
       </Text>
@@ -34,7 +38,7 @@ const Table = ({ productList }: ProductTableProps) => {
       </View>
 
       {productList.length > 0 ? (
-        productList.map((item) => renderItem({ item }))
+        productList.map((item, index) => renderItem({ item, index }))
       ) : (
         <Text style={styles.noProductsText}>No products found</Text>
       )}

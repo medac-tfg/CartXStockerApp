@@ -1,5 +1,6 @@
-import { Modal, View, Text, Image, Button, StyleSheet } from "react-native";
+import { Modal, View, Text, Button, StyleSheet } from "react-native";
 import { ProductModalProps } from "./@types/modal";
+import { Image } from "expo-image";
 
 const ProductModal = ({
   visible,
@@ -23,6 +24,7 @@ const ProductModal = ({
             <Image
               source={{ uri: productData.image }}
               style={styles.productImage}
+              contentFit="contain"
             />
           )}
           <Text style={styles.productName}>

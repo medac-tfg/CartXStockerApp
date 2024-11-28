@@ -3,6 +3,9 @@ import { ProductData } from "./product";
 
 type RootStackParamList = {
   ScanRFID: { productData: ProductData | undefined };
+  Home: undefined;
 };
 
-export type NavigationProps = StackNavigationProp<RootStackParamList>;
+export type NavigationProps = StackNavigationProp<RootStackParamList> & {
+  reset: (state: { index: number; routes: { name: "ScanRFID" | "Home" }[] }) => void;
+};

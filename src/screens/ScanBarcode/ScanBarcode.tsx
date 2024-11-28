@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   BarcodeScanningResult,
   CameraView,
@@ -14,21 +14,27 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getProductByBarcode } from "../../api/endpoints/barcode";
 
-import Overlay from "./Overlay/Overlay";
-import Modal from "./ProductModal/ProductModal";
+import Overlay from "../../components/ScanBarcode/Overlay/Overlay";
+import Modal from "../../components/ScanBarcode/ProductModal/ProductModal";
 
 import { ProductData } from "./@types/product";
 import { NavigationProps } from "./@types/navigation";
 
 const ScanBarcode = () => {
   const [permission, requestPermission] = useCameraPermissions();
-  const { navigate, goBack } = useNavigation<NavigationProps>();
+  const { navigate, reset } = useNavigation<NavigationProps>();
   const [barcodeScanned, setBarcodeScanned] = useState(false);
   const [productData, setProductData] = useState<ProductData>();
   const [modalVisible, setModalVisible] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setBarcodeScanned(false); // Reset barcodeScanned to false when the screen comes into focus
+    }, [])
+  );
 
   const sendErrorAlert = (message: string) => {
     Alert.alert("Error", message, [
@@ -69,6 +75,8 @@ const ScanBarcode = () => {
 
     setTimeout(() => setBarcodeScanned(false), 2000);
   };
+
+  const goBack = () => reset({ index: 0, routes: [{ name: "Home" }] });
 
   if (!permission || !permission.granted) {
     return (

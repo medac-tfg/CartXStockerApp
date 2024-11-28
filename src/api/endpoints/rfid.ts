@@ -10,8 +10,12 @@ export const scanProduct = async (productId: string, rfid: string) => {
 
     return data;
   } catch (error) {
-    if (isAxiosError(error) && error.response?.status === 404) {
-      return null; // Return null for not found
+    if (isAxiosError(error)) {
+      if (error.response?.status === 404 || error.response?.status === 409) {
+        return { error: true, data: error.response?.data };
+      }
+
+      return { error: true, data: "An error occurred while scanning the RFID tag." };
     } else {
       // Handle other errors (e.g., network issues, server errors)
       throw error; // Re-throw the error if it's not a 404

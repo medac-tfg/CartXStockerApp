@@ -6,4 +6,5 @@ export type ProductTableProps = {
 
 export type ProductRenderItemProps = {
   item: Product;
+  index: number;
 };
